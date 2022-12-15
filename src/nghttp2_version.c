@@ -22,16 +22,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif /* HAVE_CONFIG_H */
 
 #include <libnghttp2/nghttp2.h>
+
+#if defined _WIN32 || defined _WIN64
+#define NGHTTP2_EXTERN __declspec(dllexport)
+#elif defined __linux__
+#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
+#endif
 
 static nghttp2_info version = {NGHTTP2_VERSION_AGE, NGHTTP2_VERSION_NUM,
                                NGHTTP2_VERSION, NGHTTP2_PROTO_VERSION_ID};
 
-nghttp2_info *nghttp2_version(int least_version) {
+NGHTTP2_EXTERN nghttp2_info *nghttp2_version(int least_version) {
   if (least_version > NGHTTP2_VERSION_NUM)
     return NULL;
   return &version;

@@ -22,13 +22,21 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 #include "nghttp2_rcbuf.h"
 
 #include <string.h>
 #include <assert.h>
 
+#include <libnghttp2/nghttp2.h>
 #include "nghttp2_mem.h"
 #include "nghttp2_helper.h"
+
+#if defined _WIN32 || defined _WIN64
+#define NGHTTP2_EXTERN __declspec(dllexport)
+#elif defined __linux__
+#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
+#endif
 
 int nghttp2_rcbuf_new(nghttp2_rcbuf **rcbuf_ptr, size_t size,
                       nghttp2_mem *mem) {
@@ -72,7 +80,7 @@ void nghttp2_rcbuf_del(nghttp2_rcbuf *rcbuf) {
   nghttp2_mem_free2(rcbuf->free, rcbuf, rcbuf->mem_user_data);
 }
 
-void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
   if (rcbuf->ref == -1) {
     return;
   }
@@ -80,7 +88,7 @@ void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
   ++rcbuf->ref;
 }
 
-void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXTERN void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
   if (rcbuf == NULL || rcbuf->ref == -1) {
     return;
   }
@@ -92,11 +100,11 @@ void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
   }
 }
 
-nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXTERN nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf) {
   nghttp2_vec res = {rcbuf->base, rcbuf->len};
   return res;
 }
 
-int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXTERN int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf) {
   return rcbuf->ref == -1;
 }

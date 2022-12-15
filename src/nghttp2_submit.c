@@ -27,10 +27,18 @@
 #include <string.h>
 #include <assert.h>
 
+#include <libnghttp2/nghttp2.h>
 #include "nghttp2_session.h"
 #include "nghttp2_frame.h"
 #include "nghttp2_helper.h"
 #include "nghttp2_priority_spec.h"
+
+#if defined _WIN32 || defined _WIN64
+#define NGHTTP2_EXTERN __declspec(dllexport)
+#elif defined __linux__
+#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
+#endif
+
 
 /*
  * Detects the dependency error, that is stream attempted to depend on
@@ -377,7 +385,7 @@ int32_t nghttp2_submit_push_promise(nghttp2_session *session, uint8_t flags,
   return promised_stream_id;
 }
 
-int nghttp2_submit_window_update(nghttp2_session *session, uint8_t flags,
+NGHTTP2_EXTERN int nghttp2_submit_window_update(nghttp2_session *session, uint8_t flags,
                                  int32_t stream_id,
                                  int32_t window_size_increment) {
   int rv;
