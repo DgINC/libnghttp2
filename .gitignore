@@ -4,3 +4,4 @@
 
 /.vs
 /out/build
+/include/libnghttp2/nghttp2ver.h
