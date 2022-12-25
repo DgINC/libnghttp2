@@ -1,6 +1,7 @@
 // Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
 // (например, имена функций и макросов).
 // Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
-#define NGHTTP2_EXTERN __declspec(dllexport)
-#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
-#define NGHTTP2_EXTERN __declspec(dllimport)
+#define NGHTTP2_EXPORT __declspec(dllexport)
+#define NGHTTP2_EXPORT __attribute__ ((visibility ("default")))
+#define NGHTTP2_IMPORT __declspec(dllimport)
+#define NGHTTP2_IMPORT __attribute__ ((visibility ("default")))

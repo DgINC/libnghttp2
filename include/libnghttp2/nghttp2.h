@@ -24,9 +24,6 @@
  */
 #pragma once
 
-#ifndef NGHTTP2_H
-#define NGHTTP2_H
-
 /* Compatibility for non-Clang compilers */
 #ifndef __has_declspec_attribute
 #  define __has_declspec_attribute(x) 0
@@ -58,9 +55,9 @@ extern "C" {
 #endif
 
 #if defined _WIN32 || defined _WIN64
-#define NGHTTP2_EXTERN __declspec(dllimport)
+#define NGHTTP2_IMPORT __declspec(dllimport)
 #elif defined __linux__
-#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
+#define NGHTTP2_IMPORT __attribute__ ((visibility ("default")))
 #endif
 
 /**
@@ -415,8 +412,6 @@ typedef struct {
   size_t len;
 } nghttp2_vec;
 
-struct nghttp2_rcbuf;
-
 /**
  * @struct
  *
@@ -430,7 +425,7 @@ typedef struct nghttp2_rcbuf nghttp2_rcbuf;
  *
  * Increments the reference count of |rcbuf| by 1.
  */
-NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf);
+NGHTTP2_IMPORT void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf);
 
 /**
  * @function
@@ -439,14 +434,14 @@ NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf);
  * count becomes zero, the object pointed by |rcbuf| will be freed.
  * In this case, application must not use |rcbuf| again.
  */
-NGHTTP2_EXTERN void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf);
+NGHTTP2_IMPORT void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf);
 
 /**
  * @function
  *
  * Returns the underlying buffer managed by |rcbuf|.
  */
-NGHTTP2_EXTERN nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf);
+NGHTTP2_IMPORT nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf);
 
 /**
  * @function
@@ -455,7 +450,7 @@ NGHTTP2_EXTERN nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf);
  * and 0 otherwise. This can be useful for language bindings that wish
  * to avoid creating duplicate strings for these buffers.
  */
-NGHTTP2_EXTERN int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf);
+NGHTTP2_IMPORT int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf);
 
 /**
  * @enum
@@ -2087,7 +2082,7 @@ typedef struct nghttp2_session_callbacks nghttp2_session_callbacks;
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_callbacks_new(nghttp2_session_callbacks **callbacks_ptr);
 
 /**
@@ -2096,7 +2091,7 @@ nghttp2_session_callbacks_new(nghttp2_session_callbacks **callbacks_ptr);
  * Frees any resources allocated for |callbacks|.  If |callbacks| is
  * ``NULL``, this function does nothing.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_session_callbacks_del(nghttp2_session_callbacks *callbacks);
 
 /**
@@ -2107,7 +2102,7 @@ nghttp2_session_callbacks_del(nghttp2_session_callbacks *callbacks);
  * uses solely `nghttp2_session_mem_send()` to serialize data to
  * transmit.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_send_callback(
     nghttp2_session_callbacks *cbs, nghttp2_send_callback send_callback);
 
 /**
@@ -2118,7 +2113,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_callback(
  * application uses solely `nghttp2_session_mem_recv()` to process
  * received data.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_recv_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_recv_callback(
     nghttp2_session_callbacks *cbs, nghttp2_recv_callback recv_callback);
 
 /**
@@ -2127,7 +2122,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_recv_callback(
  * Sets callback function invoked by `nghttp2_session_recv()` and
  * `nghttp2_session_mem_recv()` when a frame is received.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_recv_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_frame_recv_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_frame_recv_callback on_frame_recv_callback);
 
@@ -2138,7 +2133,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_recv_callback(
  * `nghttp2_session_mem_recv()` when an invalid non-DATA frame is
  * received.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_session_callbacks_set_on_invalid_frame_recv_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_invalid_frame_recv_callback on_invalid_frame_recv_callback);
@@ -2149,7 +2144,7 @@ nghttp2_session_callbacks_set_on_invalid_frame_recv_callback(
  * Sets callback function invoked when a chunk of data in DATA frame
  * is received.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_data_chunk_recv_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_data_chunk_recv_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_data_chunk_recv_callback on_data_chunk_recv_callback);
 
@@ -2158,7 +2153,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_data_chunk_recv_callback(
  *
  * Sets callback function invoked before a non-DATA frame is sent.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_before_frame_send_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_before_frame_send_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_before_frame_send_callback before_frame_send_callback);
 
@@ -2167,7 +2162,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_before_frame_send_callback(
  *
  * Sets callback function invoked after a frame is sent.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_send_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_frame_send_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_frame_send_callback on_frame_send_callback);
 
@@ -2177,7 +2172,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_send_callback(
  * Sets callback function invoked when a non-DATA frame is not sent
  * because of an error.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_not_send_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_frame_not_send_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_frame_not_send_callback on_frame_not_send_callback);
 
@@ -2186,7 +2181,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_frame_not_send_callback(
  *
  * Sets callback function invoked when the stream is closed.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_stream_close_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_stream_close_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_stream_close_callback on_stream_close_callback);
 
@@ -2196,7 +2191,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_stream_close_callback(
  * Sets callback function invoked when the reception of header block
  * in HEADERS or PUSH_PROMISE is started.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_headers_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_begin_headers_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_begin_headers_callback on_begin_headers_callback);
 
@@ -2209,7 +2204,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_headers_callback(
  * `nghttp2_session_callbacks_set_on_header_callback2()` are used to
  * set callbacks, the latter has the precedence.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_header_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_header_callback on_header_callback);
 
@@ -2219,7 +2214,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback(
  * Sets callback function invoked when a header name/value pair is
  * received.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback2(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_header_callback2(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_header_callback2 on_header_callback2);
 
@@ -2232,7 +2227,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_header_callback2(
  * `nghttp2_session_callbacks_set_on_invalid_header_callback2()` are
  * used to set callbacks, the latter takes the precedence.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_invalid_header_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_invalid_header_callback on_invalid_header_callback);
 
@@ -2242,7 +2237,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback(
  * Sets callback function invoked when a invalid header name/value
  * pair is received.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback2(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_invalid_header_callback2(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_invalid_header_callback2 on_invalid_header_callback2);
 
@@ -2253,7 +2248,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_invalid_header_callback2(
  * how many padding bytes are required for the transmission of the
  * given frame.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_select_padding_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_select_padding_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_select_padding_callback select_padding_callback);
 
@@ -2263,7 +2258,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_select_padding_callback(
  * Sets callback function determine the length allowed in
  * :type:`nghttp2_data_source_read_callback`.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_session_callbacks_set_data_source_read_length_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_data_source_read_length_callback data_source_read_length_callback);
@@ -2273,7 +2268,7 @@ nghttp2_session_callbacks_set_data_source_read_length_callback(
  *
  * Sets callback function invoked when a frame header is received.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_frame_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_on_begin_frame_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_begin_frame_callback on_begin_frame_callback);
 
@@ -2284,7 +2279,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_on_begin_frame_callback(
  * :enum:`nghttp2_data_flag.NGHTTP2_DATA_FLAG_NO_COPY` is used in
  * :type:`nghttp2_data_source_read_callback` to avoid data copy.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_data_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_send_data_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_send_data_callback send_data_callback);
 
@@ -2294,7 +2289,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_send_data_callback(
  * Sets callback function invoked when the library asks the
  * application to pack extension frame payload in wire format.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_pack_extension_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_pack_extension_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_pack_extension_callback pack_extension_callback);
 
@@ -2304,7 +2299,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_pack_extension_callback(
  * Sets callback function invoked when the library asks the
  * application to unpack extension frame payload from wire format.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_unpack_extension_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_unpack_extension_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_unpack_extension_callback unpack_extension_callback);
 
@@ -2314,7 +2309,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_unpack_extension_callback(
  * Sets callback function invoked when chunk of extension frame
  * payload is received.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_session_callbacks_set_on_extension_chunk_recv_callback(
     nghttp2_session_callbacks *cbs,
     nghttp2_on_extension_chunk_recv_callback on_extension_chunk_recv_callback);
@@ -2332,7 +2327,7 @@ nghttp2_session_callbacks_set_on_extension_chunk_recv_callback(
  * :type:`nghttp2_error_callback2` are set, the latter takes
  * precedence.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_error_callback(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_error_callback(
     nghttp2_session_callbacks *cbs, nghttp2_error_callback error_callback);
 
 /**
@@ -2345,7 +2340,7 @@ NGHTTP2_EXTERN void nghttp2_session_callbacks_set_error_callback(
  * :type:`nghttp2_error_callback2` are set, the latter takes
  * precedence.
  */
-NGHTTP2_EXTERN void nghttp2_session_callbacks_set_error_callback2(
+NGHTTP2_IMPORT void nghttp2_session_callbacks_set_error_callback2(
     nghttp2_session_callbacks *cbs, nghttp2_error_callback2 error_callback2);
 
 /**
@@ -2467,7 +2462,7 @@ typedef struct nghttp2_option nghttp2_option;
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_option_new(nghttp2_option **option_ptr);
+NGHTTP2_IMPORT int nghttp2_option_new(nghttp2_option **option_ptr);
 
 /**
  * @function
@@ -2475,7 +2470,7 @@ NGHTTP2_EXTERN int nghttp2_option_new(nghttp2_option **option_ptr);
  * Frees any resources allocated for |option|.  If |option| is
  * ``NULL``, this function does nothing.
  */
-NGHTTP2_EXTERN void nghttp2_option_del(nghttp2_option *option);
+NGHTTP2_IMPORT void nghttp2_option_del(nghttp2_option *option);
 
 /**
  * @function
@@ -2487,7 +2482,7 @@ NGHTTP2_EXTERN void nghttp2_option_del(nghttp2_option *option);
  * data.  Don't use `nghttp2_submit_window_update()` for this purpose.
  * By default, this option is set to zero.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_no_auto_window_update(nghttp2_option *option, int val);
 
 /**
@@ -2505,7 +2500,7 @@ nghttp2_option_set_no_auto_window_update(nghttp2_option *option, int val);
  * value advertised in SETTINGS_MAX_CONCURRENT_STREAMS or to the
  * default value (unlimited) if none was advertised.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_peer_max_concurrent_streams(nghttp2_option *option,
                                                uint32_t val);
 
@@ -2528,7 +2523,7 @@ nghttp2_option_set_peer_max_concurrent_streams(nghttp2_option *option,
  * :enum:`nghttp2_error.NGHTTP2_ERR_BAD_CLIENT_MAGIC`, which is fatal
  * error.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_no_recv_client_magic(nghttp2_option *option, int val);
 
 /**
@@ -2544,7 +2539,7 @@ nghttp2_option_set_no_recv_client_magic(nghttp2_option *option, int val);
  * That is, even if the validation is disabled, only client can send
  * requests.
  */
-NGHTTP2_EXTERN void nghttp2_option_set_no_http_messaging(nghttp2_option *option,
+NGHTTP2_IMPORT void nghttp2_option_set_no_http_messaging(nghttp2_option *option,
                                                          int val);
 
 /**
@@ -2562,7 +2557,7 @@ NGHTTP2_EXTERN void nghttp2_option_set_no_http_messaging(nghttp2_option *option,
  * 200.  If session is configured as server side, this option has no
  * effect.  Server can control the number of streams to push.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_max_reserved_remote_streams(nghttp2_option *option,
                                                uint32_t val);
 
@@ -2579,7 +2574,7 @@ nghttp2_option_set_max_reserved_remote_streams(nghttp2_option *option,
  * receive.  The application does not have to call this function if it
  * just sends extension frames.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_user_recv_extension_type(nghttp2_option *option,
                                             uint8_t type);
 
@@ -2599,7 +2594,7 @@ nghttp2_option_set_user_recv_extension_type(nghttp2_option *option,
  * `nghttp2_option_set_user_recv_extension_type()`, the latter takes
  * precedence.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_builtin_recv_extension_type(nghttp2_option *option,
                                                uint8_t type);
 
@@ -2614,7 +2609,7 @@ nghttp2_option_set_builtin_recv_extension_type(nghttp2_option *option,
  * `nghttp2_submit_ping()` with :enum:`nghttp2_flag.NGHTTP2_FLAG_ACK`
  * as flags parameter.
  */
-NGHTTP2_EXTERN void nghttp2_option_set_no_auto_ping_ack(nghttp2_option *option,
+NGHTTP2_IMPORT void nghttp2_option_set_no_auto_ping_ack(nghttp2_option *option,
                                                         int val);
 
 /**
@@ -2628,7 +2623,7 @@ NGHTTP2_EXTERN void nghttp2_option_set_no_auto_ping_ack(nghttp2_option *option,
  * the transmission of the frame fails with error code
  * :enum:`nghttp2_error.NGHTTP2_ERR_FRAME_SIZE_ERROR`.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_max_send_header_block_length(nghttp2_option *option,
                                                 size_t val);
 
@@ -2641,7 +2636,7 @@ nghttp2_option_set_max_send_header_block_length(nghttp2_option *option,
  * actual maximum size is the minimum of the size receiver specified
  * and this option value.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_max_deflate_dynamic_table_size(nghttp2_option *option,
                                                   size_t val);
 
@@ -2657,7 +2652,7 @@ nghttp2_option_set_max_deflate_dynamic_table_size(nghttp2_option *option,
  * of value of 1 is submitted via `nghttp2_submit_settings()`, any
  * closed streams are not retained regardless of this option.
  */
-NGHTTP2_EXTERN void nghttp2_option_set_no_closed_streams(nghttp2_option *option,
+NGHTTP2_IMPORT void nghttp2_option_set_no_closed_streams(nghttp2_option *option,
                                                          int val);
 
 /**
@@ -2668,7 +2663,7 @@ NGHTTP2_EXTERN void nghttp2_option_set_no_closed_streams(nghttp2_option *option,
  * more than those frames are retained, the peer is considered to be
  * misbehaving and session will be closed.  The default value is 1000.
  */
-NGHTTP2_EXTERN void nghttp2_option_set_max_outbound_ack(nghttp2_option *option,
+NGHTTP2_IMPORT void nghttp2_option_set_max_outbound_ack(nghttp2_option *option,
                                                         size_t val);
 
 /**
@@ -2679,7 +2674,7 @@ NGHTTP2_EXTERN void nghttp2_option_set_max_outbound_ack(nghttp2_option *option,
  * are received, the peer is considered to be misbehaving and session
  * will be closed. The default value is 32.
  */
-NGHTTP2_EXTERN void nghttp2_option_set_max_settings(nghttp2_option *option,
+NGHTTP2_IMPORT void nghttp2_option_set_max_settings(nghttp2_option *option,
                                                     size_t val);
 
 /**
@@ -2696,7 +2691,7 @@ NGHTTP2_EXTERN void nghttp2_option_set_max_settings(nghttp2_option *option,
  *
  * Client session ignores this option.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_server_fallback_rfc7540_priorities(nghttp2_option *option,
                                                       int val);
 
@@ -2708,7 +2703,7 @@ nghttp2_option_set_server_fallback_rfc7540_priorities(nghttp2_option *option,
  * important fields, such as HTTP/2 pseudo header fields, are
  * validated more strictly and this option does not apply to them.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_option_set_no_rfc9113_leading_and_trailing_ws_validation(
     nghttp2_option *option, int val);
 
@@ -2733,7 +2728,7 @@ nghttp2_option_set_no_rfc9113_leading_and_trailing_ws_validation(
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_client_new(nghttp2_session **session_ptr,
                            const nghttp2_session_callbacks *callbacks,
                            void *user_data);
@@ -2759,7 +2754,7 @@ nghttp2_session_client_new(nghttp2_session **session_ptr,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_server_new(nghttp2_session **session_ptr,
                            const nghttp2_session_callbacks *callbacks,
                            void *user_data);
@@ -2785,7 +2780,7 @@ nghttp2_session_server_new(nghttp2_session **session_ptr,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_client_new2(nghttp2_session **session_ptr,
                             const nghttp2_session_callbacks *callbacks,
                             void *user_data, const nghttp2_option *option);
@@ -2811,7 +2806,7 @@ nghttp2_session_client_new2(nghttp2_session **session_ptr,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_server_new2(nghttp2_session **session_ptr,
                             const nghttp2_session_callbacks *callbacks,
                             void *user_data, const nghttp2_option *option);
@@ -2837,7 +2832,7 @@ nghttp2_session_server_new2(nghttp2_session **session_ptr,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_session_client_new3(
+NGHTTP2_IMPORT int nghttp2_session_client_new3(
     nghttp2_session **session_ptr, const nghttp2_session_callbacks *callbacks,
     void *user_data, const nghttp2_option *option, nghttp2_mem *mem);
 
@@ -2862,7 +2857,7 @@ NGHTTP2_EXTERN int nghttp2_session_client_new3(
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_session_server_new3(
+NGHTTP2_IMPORT int nghttp2_session_server_new3(
     nghttp2_session **session_ptr, const nghttp2_session_callbacks *callbacks,
     void *user_data, const nghttp2_option *option, nghttp2_mem *mem);
 
@@ -2872,7 +2867,7 @@ NGHTTP2_EXTERN int nghttp2_session_server_new3(
  * Frees any resources allocated for |session|.  If |session| is
  * ``NULL``, this function does nothing.
  */
-NGHTTP2_EXTERN void nghttp2_session_del(nghttp2_session *session);
+NGHTTP2_IMPORT void nghttp2_session_del(nghttp2_session *session);
 
 /**
  * @function
@@ -2929,7 +2924,7 @@ NGHTTP2_EXTERN void nghttp2_session_del(nghttp2_session *session);
  * :enum:`nghttp2_error.NGHTTP2_ERR_CALLBACK_FAILURE`
  *     The callback function failed.
  */
-NGHTTP2_EXTERN int nghttp2_session_send(nghttp2_session *session);
+NGHTTP2_IMPORT int nghttp2_session_send(nghttp2_session *session);
 
 /**
  * @function
@@ -2970,7 +2965,7 @@ NGHTTP2_EXTERN int nghttp2_session_send(nghttp2_session *session);
  *   buffer up small chunks of data as necessary to avoid this
  *   situation.
  */
-NGHTTP2_EXTERN ssize_t nghttp2_session_mem_send(nghttp2_session *session,
+NGHTTP2_IMPORT ssize_t nghttp2_session_mem_send(nghttp2_session *session,
                                                 const uint8_t **data_ptr);
 
 /**
@@ -3041,7 +3036,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_session_mem_send(nghttp2_session *session,
  *     Flooding was detected in this HTTP/2 session, and it must be
  *     closed.  This is most likely caused by misbehaviour of peer.
  */
-NGHTTP2_EXTERN int nghttp2_session_recv(nghttp2_session *session);
+NGHTTP2_IMPORT int nghttp2_session_recv(nghttp2_session *session);
 
 /**
  * @function
@@ -3080,7 +3075,7 @@ NGHTTP2_EXTERN int nghttp2_session_recv(nghttp2_session *session);
  *     Flooding was detected in this HTTP/2 session, and it must be
  *     closed.  This is most likely caused by misbehaviour of peer.
  */
-NGHTTP2_EXTERN ssize_t nghttp2_session_mem_recv(nghttp2_session *session,
+NGHTTP2_IMPORT ssize_t nghttp2_session_mem_recv(nghttp2_session *session,
                                                 const uint8_t *in,
                                                 size_t inlen);
 
@@ -3098,7 +3093,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_session_mem_recv(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_session_resume_data(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_resume_data(nghttp2_session *session,
                                                int32_t stream_id);
 
 /**
@@ -3111,7 +3106,7 @@ NGHTTP2_EXTERN int nghttp2_session_resume_data(nghttp2_session *session,
  * `nghttp2_session_want_write()` return 0, the application should
  * drop the connection.
  */
-NGHTTP2_EXTERN int nghttp2_session_want_read(nghttp2_session *session);
+NGHTTP2_IMPORT int nghttp2_session_want_read(nghttp2_session *session);
 
 /**
  * @function
@@ -3123,7 +3118,7 @@ NGHTTP2_EXTERN int nghttp2_session_want_read(nghttp2_session *session);
  * `nghttp2_session_want_write()` return 0, the application should
  * drop the connection.
  */
-NGHTTP2_EXTERN int nghttp2_session_want_write(nghttp2_session *session);
+NGHTTP2_IMPORT int nghttp2_session_want_write(nghttp2_session *session);
 
 /**
  * @function
@@ -3137,7 +3132,7 @@ NGHTTP2_EXTERN int nghttp2_session_want_write(nghttp2_session *session);
  * ``NULL``.  If the stream does not exist, this function returns
  * ``NULL``.
  */
-NGHTTP2_EXTERN void *
+NGHTTP2_IMPORT void *
 nghttp2_session_get_stream_user_data(nghttp2_session *session,
                                      int32_t stream_id);
 
@@ -3159,7 +3154,7 @@ nghttp2_session_get_stream_user_data(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
  *     The stream does not exist
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_set_stream_user_data(nghttp2_session *session,
                                      int32_t stream_id, void *stream_user_data);
 
@@ -3170,7 +3165,7 @@ nghttp2_session_set_stream_user_data(nghttp2_session *session,
  * specified in `nghttp2_session_client_new()`, or
  * `nghttp2_session_server_new()`.
  */
-NGHTTP2_EXTERN void nghttp2_session_set_user_data(nghttp2_session *session,
+NGHTTP2_IMPORT void nghttp2_session_set_user_data(nghttp2_session *session,
                                                   void *user_data);
 
 /**
@@ -3179,7 +3174,7 @@ NGHTTP2_EXTERN void nghttp2_session_set_user_data(nghttp2_session *session,
  * Returns the number of frames in the outbound queue.  This does not
  * include the deferred DATA frames.
  */
-NGHTTP2_EXTERN size_t
+NGHTTP2_IMPORT size_t
 nghttp2_session_get_outbound_queue_size(nghttp2_session *session);
 
 /**
@@ -3196,7 +3191,7 @@ nghttp2_session_get_outbound_queue_size(nghttp2_session *session);
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_recv_data_length(
+NGHTTP2_IMPORT int32_t nghttp2_session_get_stream_effective_recv_data_length(
     nghttp2_session *session, int32_t stream_id);
 
 /**
@@ -3216,7 +3211,7 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_recv_data_length(
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_local_window_size(
+NGHTTP2_IMPORT int32_t nghttp2_session_get_stream_effective_local_window_size(
     nghttp2_session *session, int32_t stream_id);
 
 /**
@@ -3231,7 +3226,7 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_effective_local_window_size(
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_local_window_size(
+NGHTTP2_IMPORT int32_t nghttp2_session_get_stream_local_window_size(
     nghttp2_session *session, int32_t stream_id);
 
 /**
@@ -3248,7 +3243,7 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_local_window_size(
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_session_get_effective_recv_data_length(nghttp2_session *session);
 
 /**
@@ -3268,7 +3263,7 @@ nghttp2_session_get_effective_recv_data_length(nghttp2_session *session);
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_session_get_effective_local_window_size(nghttp2_session *session);
 
 /**
@@ -3282,7 +3277,7 @@ nghttp2_session_get_effective_local_window_size(nghttp2_session *session);
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_session_get_local_window_size(nghttp2_session *session);
 
 /**
@@ -3299,7 +3294,7 @@ nghttp2_session_get_local_window_size(nghttp2_session *session);
  *
  * This function returns -1 if it fails.
  */
-NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_remote_window_size(
+NGHTTP2_IMPORT int32_t nghttp2_session_get_stream_remote_window_size(
     nghttp2_session *session, int32_t stream_id);
 
 /**
@@ -3309,7 +3304,7 @@ NGHTTP2_EXTERN int32_t nghttp2_session_get_stream_remote_window_size(
  *
  * This function always succeeds.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_session_get_remote_window_size(nghttp2_session *session);
 
 /**
@@ -3318,7 +3313,7 @@ nghttp2_session_get_remote_window_size(nghttp2_session *session);
  * Returns 1 if local peer half closed the given stream |stream_id|.
  * Returns 0 if it did not.  Returns -1 if no such stream exists.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_get_stream_local_close(nghttp2_session *session,
                                        int32_t stream_id);
 
@@ -3328,7 +3323,7 @@ nghttp2_session_get_stream_local_close(nghttp2_session *session,
  * Returns 1 if remote peer half closed the given stream |stream_id|.
  * Returns 0 if it did not.  Returns -1 if no such stream exists.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_get_stream_remote_close(nghttp2_session *session,
                                         int32_t stream_id);
 
@@ -3338,7 +3333,7 @@ nghttp2_session_get_stream_remote_close(nghttp2_session *session,
  * Returns the current dynamic table size of HPACK inflater, including
  * the overhead 32 bytes per entry described in RFC 7541.
  */
-NGHTTP2_EXTERN size_t
+NGHTTP2_IMPORT size_t
 nghttp2_session_get_hd_inflate_dynamic_table_size(nghttp2_session *session);
 
 /**
@@ -3347,7 +3342,7 @@ nghttp2_session_get_hd_inflate_dynamic_table_size(nghttp2_session *session);
  * Returns the current dynamic table size of HPACK deflater including
  * the overhead 32 bytes per entry described in RFC 7541.
  */
-NGHTTP2_EXTERN size_t
+NGHTTP2_IMPORT size_t
 nghttp2_session_get_hd_deflate_dynamic_table_size(nghttp2_session *session);
 
 /**
@@ -3376,7 +3371,7 @@ nghttp2_session_get_hd_deflate_dynamic_table_size(nghttp2_session *session);
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_session_terminate_session(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_terminate_session(nghttp2_session *session,
                                                      uint32_t error_code);
 
 /**
@@ -3405,7 +3400,7 @@ NGHTTP2_EXTERN int nghttp2_session_terminate_session(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
  *     The |last_stream_id| is invalid.
  */
-NGHTTP2_EXTERN int nghttp2_session_terminate_session2(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_terminate_session2(nghttp2_session *session,
                                                       int32_t last_stream_id,
                                                       uint32_t error_code);
 
@@ -3444,7 +3439,7 @@ NGHTTP2_EXTERN int nghttp2_session_terminate_session2(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
  *     The |session| is initialized as client.
  */
-NGHTTP2_EXTERN int nghttp2_submit_shutdown_notice(nghttp2_session *session);
+NGHTTP2_IMPORT int nghttp2_submit_shutdown_notice(nghttp2_session *session);
 
 /**
  * @function
@@ -3453,7 +3448,7 @@ NGHTTP2_EXTERN int nghttp2_submit_shutdown_notice(nghttp2_session *session);
  * The |id| must be one of values defined in
  * :enum:`nghttp2_settings_id`.
  */
-NGHTTP2_EXTERN uint32_t nghttp2_session_get_remote_settings(
+NGHTTP2_IMPORT uint32_t nghttp2_session_get_remote_settings(
     nghttp2_session *session, nghttp2_settings_id id);
 
 /**
@@ -3463,7 +3458,7 @@ NGHTTP2_EXTERN uint32_t nghttp2_session_get_remote_settings(
  * by the remote endpoint.  The |id| must be one of the values defined
  * in :enum:`nghttp2_settings_id`.
  */
-NGHTTP2_EXTERN uint32_t nghttp2_session_get_local_settings(
+NGHTTP2_IMPORT uint32_t nghttp2_session_get_local_settings(
     nghttp2_session *session, nghttp2_settings_id id);
 
 /**
@@ -3482,7 +3477,7 @@ NGHTTP2_EXTERN uint32_t nghttp2_session_get_local_settings(
  *     |next_stream_id| is invalid (e.g., even integer for client, or
  *     odd integer for server).
  */
-NGHTTP2_EXTERN int nghttp2_session_set_next_stream_id(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_set_next_stream_id(nghttp2_session *session,
                                                       int32_t next_stream_id);
 
 /**
@@ -3492,7 +3487,7 @@ NGHTTP2_EXTERN int nghttp2_session_set_next_stream_id(nghttp2_session *session,
  * uint32_t.  If we run out of stream ID for this session, this
  * function returns 1 << 31.
  */
-NGHTTP2_EXTERN uint32_t
+NGHTTP2_IMPORT uint32_t
 nghttp2_session_get_next_stream_id(nghttp2_session *session);
 
 /**
@@ -3518,7 +3513,7 @@ nghttp2_session_get_next_stream_id(nghttp2_session *session);
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
  *     Automatic WINDOW_UPDATE is not disabled.
  */
-NGHTTP2_EXTERN int nghttp2_session_consume(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_consume(nghttp2_session *session,
                                            int32_t stream_id, size_t size);
 
 /**
@@ -3537,7 +3532,7 @@ NGHTTP2_EXTERN int nghttp2_session_consume(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
  *     Automatic WINDOW_UPDATE is not disabled.
  */
-NGHTTP2_EXTERN int nghttp2_session_consume_connection(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_consume_connection(nghttp2_session *session,
                                                       size_t size);
 
 /**
@@ -3558,7 +3553,7 @@ NGHTTP2_EXTERN int nghttp2_session_consume_connection(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_STATE`
  *     Automatic WINDOW_UPDATE is not disabled.
  */
-NGHTTP2_EXTERN int nghttp2_session_consume_stream(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_consume_stream(nghttp2_session *session,
                                                   int32_t stream_id,
                                                   size_t size);
 
@@ -3596,7 +3591,7 @@ NGHTTP2_EXTERN int nghttp2_session_consume_stream(nghttp2_session *session,
  *     Attempted to depend on itself; or no stream exist for the given
  *     |stream_id|; or |stream_id| is 0
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_change_stream_priority(nghttp2_session *session,
                                        int32_t stream_id,
                                        const nghttp2_priority_spec *pri_spec);
@@ -3647,7 +3642,7 @@ nghttp2_session_change_stream_priority(nghttp2_session *session,
  *     stream ID greater than or equal to the given stream ID; or
  *     |stream_id| is 0
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_create_idle_stream(nghttp2_session *session, int32_t stream_id,
                                    const nghttp2_priority_spec *pri_spec);
 
@@ -3698,7 +3693,7 @@ nghttp2_session_create_idle_stream(nghttp2_session *session, int32_t stream_id,
  * :enum:`nghttp2_error.NGHTTP2_ERR_PROTO`
  *     The stream ID 1 is already used or closed; or is not available.
  */
-NGHTTP2_EXTERN int nghttp2_session_upgrade(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_upgrade(nghttp2_session *session,
                                            const uint8_t *settings_payload,
                                            size_t settings_payloadlen,
                                            void *stream_user_data);
@@ -3742,7 +3737,7 @@ NGHTTP2_EXTERN int nghttp2_session_upgrade(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_PROTO`
  *     The stream ID 1 is already used or closed; or is not available.
  */
-NGHTTP2_EXTERN int nghttp2_session_upgrade2(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_session_upgrade2(nghttp2_session *session,
                                             const uint8_t *settings_payload,
                                             size_t settings_payloadlen,
                                             int head_request,
@@ -3769,7 +3764,7 @@ NGHTTP2_EXTERN int nghttp2_session_upgrade2(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INSUFF_BUFSIZE`
  *     The provided |buflen| size is too small to hold the output.
  */
-NGHTTP2_EXTERN ssize_t nghttp2_pack_settings_payload(
+NGHTTP2_IMPORT ssize_t nghttp2_pack_settings_payload(
     uint8_t *buf, size_t buflen, const nghttp2_settings_entry *iv, size_t niv);
 
 /**
@@ -3778,7 +3773,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_pack_settings_payload(
  * Returns string describing the |lib_error_code|.  The
  * |lib_error_code| must be one of the :enum:`nghttp2_error`.
  */
-NGHTTP2_EXTERN const char *nghttp2_strerror(int lib_error_code);
+NGHTTP2_IMPORT const char *nghttp2_strerror(int lib_error_code);
 
 /**
  * @function
@@ -3788,7 +3783,7 @@ NGHTTP2_EXTERN const char *nghttp2_strerror(int lib_error_code);
  * NGHTTP2_PROTOCOL_ERROR``).  If string representation is unknown for
  * given |error_code|, this function returns string ``unknown``.
  */
-NGHTTP2_EXTERN const char *nghttp2_http2_strerror(uint32_t error_code);
+NGHTTP2_IMPORT const char* nghttp2_http2_strerror(uint32_t error_code);
 
 /**
  * @function
@@ -3800,7 +3795,7 @@ NGHTTP2_EXTERN const char *nghttp2_http2_strerror(uint32_t error_code);
  * The |weight| must be in [:macro:`NGHTTP2_MIN_WEIGHT`,
  * :macro:`NGHTTP2_MAX_WEIGHT`], inclusive.
  */
-NGHTTP2_EXTERN void nghttp2_priority_spec_init(nghttp2_priority_spec *pri_spec,
+NGHTTP2_IMPORT void nghttp2_priority_spec_init(nghttp2_priority_spec *pri_spec,
                                                int32_t stream_id,
                                                int32_t weight, int exclusive);
 
@@ -3811,7 +3806,7 @@ NGHTTP2_EXTERN void nghttp2_priority_spec_init(nghttp2_priority_spec *pri_spec,
  * are: stream_id = 0, weight = :macro:`NGHTTP2_DEFAULT_WEIGHT` and
  * exclusive = 0.
  */
-NGHTTP2_EXTERN void
+NGHTTP2_IMPORT void
 nghttp2_priority_spec_default_init(nghttp2_priority_spec *pri_spec);
 
 /**
@@ -3819,7 +3814,7 @@ nghttp2_priority_spec_default_init(nghttp2_priority_spec *pri_spec);
  *
  * Returns nonzero if the |pri_spec| is filled with default values.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_priority_spec_check_default(const nghttp2_priority_spec *pri_spec);
 
 /**
@@ -3904,7 +3899,7 @@ nghttp2_priority_spec_check_default(const nghttp2_priority_spec *pri_spec);
  *   specially, and it can set data to a stream during this period.
  *
  */
-NGHTTP2_EXTERN int32_t nghttp2_submit_request(
+NGHTTP2_IMPORT int32_t nghttp2_submit_request(
     nghttp2_session *session, const nghttp2_priority_spec *pri_spec,
     const nghttp2_nv *nva, size_t nvlen, const nghttp2_data_provider *data_prd,
     void *stream_user_data);
@@ -3973,7 +3968,7 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_request(
  *   program crash.  It is generally considered to a programming error
  *   to commit response twice.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_submit_response(nghttp2_session *session, int32_t stream_id,
                         const nghttp2_nv *nva, size_t nvlen,
                         const nghttp2_data_provider *data_prd);
@@ -4029,7 +4024,7 @@ nghttp2_submit_response(nghttp2_session *session, int32_t stream_id,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
  *     The |stream_id| is 0.
  */
-NGHTTP2_EXTERN int nghttp2_submit_trailer(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_trailer(nghttp2_session *session,
                                           int32_t stream_id,
                                           const nghttp2_nv *nva, size_t nvlen);
 
@@ -4126,7 +4121,7 @@ NGHTTP2_EXTERN int nghttp2_submit_trailer(nghttp2_session *session,
  *   frame.
  *
  */
-NGHTTP2_EXTERN int32_t nghttp2_submit_headers(
+NGHTTP2_IMPORT int32_t nghttp2_submit_headers(
     nghttp2_session *session, uint8_t flags, int32_t stream_id,
     const nghttp2_priority_spec *pri_spec, const nghttp2_nv *nva, size_t nvlen,
     void *stream_user_data);
@@ -4172,7 +4167,7 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_headers(
  *   use, these two functions are enough to implement both client and
  *   server.
  */
-NGHTTP2_EXTERN int nghttp2_submit_data(nghttp2_session *session, uint8_t flags,
+NGHTTP2_IMPORT int nghttp2_submit_data(nghttp2_session *session, uint8_t flags,
                                        int32_t stream_id,
                                        const nghttp2_data_provider *data_prd);
 
@@ -4211,7 +4206,7 @@ NGHTTP2_EXTERN int nghttp2_submit_data(nghttp2_session *session, uint8_t flags,
  *     The |stream_id| is 0; or the |pri_spec| is NULL; or trying to
  *     depend on itself.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_submit_priority(nghttp2_session *session, uint8_t flags,
                         int32_t stream_id,
                         const nghttp2_priority_spec *pri_spec);
@@ -4290,7 +4285,7 @@ typedef struct nghttp2_extpri {
  * :enum:`nghttp2_error.NGHTTP2_ERR_INVALID_ARGUMENT`
  *     The |stream_id| is 0.
  */
-NGHTTP2_EXTERN int nghttp2_submit_rst_stream(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_rst_stream(nghttp2_session *session,
                                              uint8_t flags, int32_t stream_id,
                                              uint32_t error_code);
 
@@ -4324,7 +4319,7 @@ NGHTTP2_EXTERN int nghttp2_submit_rst_stream(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_submit_settings(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_settings(nghttp2_session *session,
                                            uint8_t flags,
                                            const nghttp2_settings_entry *iv,
                                            size_t niv);
@@ -4400,7 +4395,7 @@ NGHTTP2_EXTERN int nghttp2_submit_settings(nghttp2_session *session,
  *   is called for this frame.
  *
  */
-NGHTTP2_EXTERN int32_t nghttp2_submit_push_promise(
+NGHTTP2_IMPORT int32_t nghttp2_submit_push_promise(
     nghttp2_session *session, uint8_t flags, int32_t stream_id,
     const nghttp2_nv *nva, size_t nvlen, void *promised_stream_user_data);
 
@@ -4429,7 +4424,7 @@ NGHTTP2_EXTERN int32_t nghttp2_submit_push_promise(
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_submit_ping(nghttp2_session *session, uint8_t flags,
+NGHTTP2_IMPORT int nghttp2_submit_ping(nghttp2_session *session, uint8_t flags,
                                        const uint8_t *opaque_data);
 
 /**
@@ -4477,7 +4472,7 @@ NGHTTP2_EXTERN int nghttp2_submit_ping(nghttp2_session *session, uint8_t flags,
  *     The |opaque_data_len| is too large; the |last_stream_id| is
  *     invalid.
  */
-NGHTTP2_EXTERN int nghttp2_submit_goaway(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_goaway(nghttp2_session *session,
                                          uint8_t flags, int32_t last_stream_id,
                                          uint32_t error_code,
                                          const uint8_t *opaque_data,
@@ -4494,7 +4489,7 @@ NGHTTP2_EXTERN int nghttp2_submit_goaway(nghttp2_session *session,
  *
  * This function always succeeds.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_session_get_last_proc_stream_id(nghttp2_session *session);
 
 /**
@@ -4512,7 +4507,7 @@ nghttp2_session_get_last_proc_stream_id(nghttp2_session *session);
  * may return error.  Or, request is failed to sent, and
  * :type:`nghttp2_on_stream_close_callback` is called.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_check_request_allowed(nghttp2_session *session);
 
 /**
@@ -4520,7 +4515,7 @@ nghttp2_session_check_request_allowed(nghttp2_session *session);
  *
  * Returns nonzero if |session| is initialized as server side session.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_check_server_session(nghttp2_session *session);
 
 /**
@@ -4561,7 +4556,7 @@ nghttp2_session_check_server_session(nghttp2_session *session);
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_submit_window_update(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_window_update(nghttp2_session *session,
                                                 uint8_t flags,
                                                 int32_t stream_id,
                                                 int32_t window_size_increment);
@@ -4600,7 +4595,7 @@ NGHTTP2_EXTERN int nghttp2_submit_window_update(nghttp2_session *session,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_session_set_local_window_size(nghttp2_session *session, uint8_t flags,
                                       int32_t stream_id, int32_t window_size);
 
@@ -4643,7 +4638,7 @@ nghttp2_session_set_local_window_size(nghttp2_session *session, uint8_t flags,
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory
  */
-NGHTTP2_EXTERN int nghttp2_submit_extension(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_extension(nghttp2_session *session,
                                             uint8_t type, uint8_t flags,
                                             int32_t stream_id, void *payload);
 
@@ -4713,7 +4708,7 @@ typedef struct {
  *     16382; or |origin_len| is 0 while |stream_id| is 0; or
  *     |origin_len| is not 0 while |stream_id| is not 0.
  */
-NGHTTP2_EXTERN int nghttp2_submit_altsvc(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_altsvc(nghttp2_session *session,
                                          uint8_t flags, int32_t stream_id,
                                          const uint8_t *origin,
                                          size_t origin_len,
@@ -4790,7 +4785,7 @@ typedef struct {
  *     There are too many origins, or an origin is too large to fit
  *     into a default frame payload.
  */
-NGHTTP2_EXTERN int nghttp2_submit_origin(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_origin(nghttp2_session *session,
                                          uint8_t flags,
                                          const nghttp2_origin_entry *ov,
                                          size_t nov);
@@ -4857,7 +4852,7 @@ typedef struct {
  *     The |field_value_len| is larger than 16380; or |stream_id| is
  *     0.
  */
-NGHTTP2_EXTERN int nghttp2_submit_priority_update(nghttp2_session *session,
+NGHTTP2_IMPORT int nghttp2_submit_priority_update(nghttp2_session *session,
                                                   uint8_t flags,
                                                   int32_t stream_id,
                                                   const uint8_t *field_value,
@@ -4893,7 +4888,7 @@ NGHTTP2_EXTERN int nghttp2_submit_priority_update(nghttp2_session *session,
  *     |stream_id| is zero; or a stream denoted by |stream_id| is not
  *     found.
  */
-NGHTTP2_EXTERN int nghttp2_session_change_extpri_stream_priority(
+NGHTTP2_IMPORT int nghttp2_session_change_extpri_stream_priority(
     nghttp2_session *session, int32_t stream_id, const nghttp2_extpri *extpri,
     int ignore_client_signal);
 
@@ -4906,7 +4901,7 @@ NGHTTP2_EXTERN int nghttp2_session_change_extpri_stream_priority(
  * returns positive integer if ``lhs->name`` is found to be greater
  * than ``rhs->name``; or returns 0 otherwise.
  */
-NGHTTP2_EXTERN int nghttp2_nv_compare_name(const nghttp2_nv *lhs,
+NGHTTP2_IMPORT int nghttp2_nv_compare_name(const nghttp2_nv *lhs,
                                            const nghttp2_nv *rhs);
 
 /**
@@ -4967,7 +4962,7 @@ NGHTTP2_EXTERN int nghttp2_nv_compare_name(const nghttp2_nv *lhs,
  *     SSL_CTX_set_next_proto_select_cb(ssl_ctx, select_next_proto_cb, my_obj);
  *
  */
-NGHTTP2_EXTERN int nghttp2_select_next_protocol(unsigned char **out,
+NGHTTP2_IMPORT int nghttp2_select_next_protocol(unsigned char **out,
                                                 unsigned char *outlen,
                                                 const unsigned char *in,
                                                 unsigned int inlen);
@@ -4978,7 +4973,7 @@ NGHTTP2_EXTERN int nghttp2_select_next_protocol(unsigned char **out,
  * Returns nonzero if the :type:`nghttp2_error` library error code
  * |lib_error| is fatal.
  */
-NGHTTP2_EXTERN int nghttp2_is_fatal(int lib_error_code);
+NGHTTP2_IMPORT int nghttp2_is_fatal(int lib_error_code);
 
 /**
  * @function
@@ -4989,7 +4984,7 @@ NGHTTP2_EXTERN int nghttp2_is_fatal(int lib_error_code);
  * Because this is a header field name in HTTP2, the upper cased alphabet
  * is treated as error.
  */
-NGHTTP2_EXTERN int nghttp2_check_header_name(const uint8_t *name, size_t len);
+int NGHTTP2_IMPORT nghttp2_check_header_name(const uint8_t *name, size_t len);
 
 /**
  * @function
@@ -5001,7 +4996,7 @@ NGHTTP2_EXTERN int nghttp2_check_header_name(const uint8_t *name, size_t len);
  * This function is considered obsolete, and application should
  * consider to use `nghttp2_check_header_value_rfc9113()` instead.
  */
-NGHTTP2_EXTERN int nghttp2_check_header_value(const uint8_t *value, size_t len);
+int NGHTTP2_IMPORT nghttp2_check_header_value(const uint8_t *value, size_t len);
 
 /**
  * @function
@@ -5011,7 +5006,7 @@ NGHTTP2_EXTERN int nghttp2_check_header_value(const uint8_t *value, size_t len);
  * http://tools.ietf.org/html/rfc7230#section-3.2, plus
  * https://datatracker.ietf.org/doc/html/rfc9113#section-8.2.1
  */
-NGHTTP2_EXTERN int nghttp2_check_header_value_rfc9113(const uint8_t *value,
+int NGHTTP2_IMPORT nghttp2_check_header_value_rfc9113(const uint8_t *value,
                                                       size_t len);
 
 /**
@@ -5022,7 +5017,7 @@ NGHTTP2_EXTERN int nghttp2_check_header_value_rfc9113(const uint8_t *value,
  * https://datatracker.ietf.org/doc/html/rfc7231#section-4 and
  * https://datatracker.ietf.org/doc/html/rfc7230#section-3.2.6
  */
-NGHTTP2_EXTERN int nghttp2_check_method(const uint8_t *value, size_t len);
+int NGHTTP2_IMPORT nghttp2_check_method(const uint8_t *value, size_t len);
 
 /**
  * @function
@@ -5036,7 +5031,7 @@ NGHTTP2_EXTERN int nghttp2_check_method(const uint8_t *value, size_t len);
  * of path.  The allowed characters are all characters valid by
  * `nghttp2_check_header_value` minus SPC and HT.
  */
-NGHTTP2_EXTERN int nghttp2_check_path(const uint8_t *value, size_t len);
+int NGHTTP2_IMPORT nghttp2_check_path(const uint8_t *value, size_t len);
 
 /**
  * @function
@@ -5049,7 +5044,7 @@ NGHTTP2_EXTERN int nghttp2_check_path(const uint8_t *value, size_t len);
  * In particular, it does not check whether |value| follows the syntax
  * of authority.
  */
-NGHTTP2_EXTERN int nghttp2_check_authority(const uint8_t *value, size_t len);
+int NGHTTP2_IMPORT nghttp2_check_authority(const uint8_t *value, size_t len);
 
 /* HPACK API */
 
@@ -5078,7 +5073,7 @@ typedef struct nghttp2_hd_deflater nghttp2_hd_deflater;
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_hd_deflate_new(nghttp2_hd_deflater **deflater_ptr,
                        size_t max_deflate_dynamic_table_size);
 
@@ -5097,7 +5092,7 @@ nghttp2_hd_deflate_new(nghttp2_hd_deflater **deflater_ptr,
  * The library code does not refer to |mem| pointer after this
  * function returns, so the application can safely free it.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_hd_deflate_new2(nghttp2_hd_deflater **deflater_ptr,
                         size_t max_deflate_dynamic_table_size,
                         nghttp2_mem *mem);
@@ -5107,7 +5102,7 @@ nghttp2_hd_deflate_new2(nghttp2_hd_deflater **deflater_ptr,
  *
  * Deallocates any resources allocated for |deflater|.
  */
-NGHTTP2_EXTERN void nghttp2_hd_deflate_del(nghttp2_hd_deflater *deflater);
+NGHTTP2_IMPORT void nghttp2_hd_deflate_del(nghttp2_hd_deflater *deflater);
 
 /**
  * @function
@@ -5132,7 +5127,7 @@ NGHTTP2_EXTERN void nghttp2_hd_deflate_del(nghttp2_hd_deflater *deflater);
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_hd_deflate_change_table_size(nghttp2_hd_deflater *deflater,
                                      size_t settings_max_dynamic_table_size);
 
@@ -5163,7 +5158,7 @@ nghttp2_hd_deflate_change_table_size(nghttp2_hd_deflater *deflater,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INSUFF_BUFSIZE`
  *     The provided |buflen| size is too small to hold the output.
  */
-NGHTTP2_EXTERN ssize_t nghttp2_hd_deflate_hd(nghttp2_hd_deflater *deflater,
+NGHTTP2_IMPORT ssize_t nghttp2_hd_deflate_hd(nghttp2_hd_deflater *deflater,
                                              uint8_t *buf, size_t buflen,
                                              const nghttp2_nv *nva,
                                              size_t nvlen);
@@ -5196,7 +5191,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_hd_deflate_hd(nghttp2_hd_deflater *deflater,
  * :enum:`nghttp2_error.NGHTTP2_ERR_INSUFF_BUFSIZE`
  *     The provided |buflen| size is too small to hold the output.
  */
-NGHTTP2_EXTERN ssize_t nghttp2_hd_deflate_hd_vec(nghttp2_hd_deflater *deflater,
+NGHTTP2_IMPORT ssize_t nghttp2_hd_deflate_hd_vec(nghttp2_hd_deflater *deflater,
                                                  const nghttp2_vec *vec,
                                                  size_t veclen,
                                                  const nghttp2_nv *nva,
@@ -5208,7 +5203,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_hd_deflate_hd_vec(nghttp2_hd_deflater *deflater,
  * Returns an upper bound on the compressed size after deflation of
  * |nva| of length |nvlen|.
  */
-NGHTTP2_EXTERN size_t nghttp2_hd_deflate_bound(nghttp2_hd_deflater *deflater,
+NGHTTP2_IMPORT size_t nghttp2_hd_deflate_bound(nghttp2_hd_deflater *deflater,
                                                const nghttp2_nv *nva,
                                                size_t nvlen);
 
@@ -5219,7 +5214,7 @@ NGHTTP2_EXTERN size_t nghttp2_hd_deflate_bound(nghttp2_hd_deflater *deflater,
  * contains.  This is the sum of the number of static table and
  * dynamic table, so the return value is at least 61.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t nghttp2_hd_deflate_get_num_table_entries(nghttp2_hd_deflater *deflater);
 
 /**
@@ -5232,7 +5227,7 @@ size_t nghttp2_hd_deflate_get_num_table_entries(nghttp2_hd_deflater *deflater);
  * If |idx| is strictly greater than the number of entries the tables
  * contain, this function returns NULL.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 const nghttp2_nv *
 nghttp2_hd_deflate_get_table_entry(nghttp2_hd_deflater *deflater, size_t idx);
 
@@ -5242,7 +5237,7 @@ nghttp2_hd_deflate_get_table_entry(nghttp2_hd_deflater *deflater, size_t idx);
  * Returns the used dynamic table size, including the overhead 32
  * bytes per entry described in RFC 7541.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t nghttp2_hd_deflate_get_dynamic_table_size(nghttp2_hd_deflater *deflater);
 
 /**
@@ -5250,7 +5245,7 @@ size_t nghttp2_hd_deflate_get_dynamic_table_size(nghttp2_hd_deflater *deflater);
  *
  * Returns the maximum dynamic table size.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t
 nghttp2_hd_deflate_get_max_dynamic_table_size(nghttp2_hd_deflater *deflater);
 
@@ -5276,7 +5271,7 @@ typedef struct nghttp2_hd_inflater nghttp2_hd_inflater;
  * :enum:`nghttp2_error.NGHTTP2_ERR_NOMEM`
  *     Out of memory.
  */
-NGHTTP2_EXTERN int nghttp2_hd_inflate_new(nghttp2_hd_inflater **inflater_ptr);
+NGHTTP2_IMPORT int nghttp2_hd_inflate_new(nghttp2_hd_inflater **inflater_ptr);
 
 /**
  * @function
@@ -5293,7 +5288,7 @@ NGHTTP2_EXTERN int nghttp2_hd_inflate_new(nghttp2_hd_inflater **inflater_ptr);
  * The library code does not refer to |mem| pointer after this
  * function returns, so the application can safely free it.
  */
-NGHTTP2_EXTERN int nghttp2_hd_inflate_new2(nghttp2_hd_inflater **inflater_ptr,
+NGHTTP2_IMPORT int nghttp2_hd_inflate_new2(nghttp2_hd_inflater **inflater_ptr,
                                            nghttp2_mem *mem);
 
 /**
@@ -5301,7 +5296,7 @@ NGHTTP2_EXTERN int nghttp2_hd_inflate_new2(nghttp2_hd_inflater **inflater_ptr,
  *
  * Deallocates any resources allocated for |inflater|.
  */
-NGHTTP2_EXTERN void nghttp2_hd_inflate_del(nghttp2_hd_inflater *inflater);
+NGHTTP2_IMPORT void nghttp2_hd_inflate_del(nghttp2_hd_inflater *inflater);
 
 /**
  * @function
@@ -5329,7 +5324,7 @@ NGHTTP2_EXTERN void nghttp2_hd_inflate_del(nghttp2_hd_inflater *inflater);
  *     Probably, application missed to call
  *     `nghttp2_hd_inflate_end_headers()`.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_hd_inflate_change_table_size(nghttp2_hd_inflater *inflater,
                                      size_t settings_max_dynamic_table_size);
 
@@ -5435,7 +5430,7 @@ typedef enum {
  *     }
  *
  */
-NGHTTP2_EXTERN ssize_t nghttp2_hd_inflate_hd(nghttp2_hd_inflater *inflater,
+NGHTTP2_IMPORT ssize_t nghttp2_hd_inflate_hd(nghttp2_hd_inflater *inflater,
                                              nghttp2_nv *nv_out,
                                              int *inflate_flags, uint8_t *in,
                                              size_t inlen, int in_final);
@@ -5523,7 +5518,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_hd_inflate_hd(nghttp2_hd_inflater *inflater,
  *     }
  *
  */
-NGHTTP2_EXTERN ssize_t nghttp2_hd_inflate_hd2(nghttp2_hd_inflater *inflater,
+NGHTTP2_IMPORT ssize_t nghttp2_hd_inflate_hd2(nghttp2_hd_inflater *inflater,
                                               nghttp2_nv *nv_out,
                                               int *inflate_flags,
                                               const uint8_t *in, size_t inlen,
@@ -5537,7 +5532,7 @@ NGHTTP2_EXTERN ssize_t nghttp2_hd_inflate_hd2(nghttp2_hd_inflater *inflater,
  * This function returns 0 if it succeeds. Currently this function
  * always succeeds.
  */
-NGHTTP2_EXTERN int
+NGHTTP2_IMPORT int
 nghttp2_hd_inflate_end_headers(nghttp2_hd_inflater *inflater);
 
 /**
@@ -5547,7 +5542,7 @@ nghttp2_hd_inflate_end_headers(nghttp2_hd_inflater *inflater);
  * contains.  This is the sum of the number of static table and
  * dynamic table, so the return value is at least 61.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t nghttp2_hd_inflate_get_num_table_entries(nghttp2_hd_inflater *inflater);
 
 /**
@@ -5560,7 +5555,7 @@ size_t nghttp2_hd_inflate_get_num_table_entries(nghttp2_hd_inflater *inflater);
  * If |idx| is strictly greater than the number of entries the tables
  * contain, this function returns NULL.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 const nghttp2_nv *
 nghttp2_hd_inflate_get_table_entry(nghttp2_hd_inflater *inflater, size_t idx);
 
@@ -5570,7 +5565,7 @@ nghttp2_hd_inflate_get_table_entry(nghttp2_hd_inflater *inflater, size_t idx);
  * Returns the used dynamic table size, including the overhead 32
  * bytes per entry described in RFC 7541.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t nghttp2_hd_inflate_get_dynamic_table_size(nghttp2_hd_inflater *inflater);
 
 /**
@@ -5578,7 +5573,7 @@ size_t nghttp2_hd_inflate_get_dynamic_table_size(nghttp2_hd_inflater *inflater);
  *
  * Returns the maximum dynamic table size.
  */
-NGHTTP2_EXTERN
+NGHTTP2_IMPORT
 size_t
 nghttp2_hd_inflate_get_max_dynamic_table_size(nghttp2_hd_inflater *inflater);
 
@@ -5605,7 +5600,7 @@ typedef struct nghttp2_stream nghttp2_stream;
  * call of `nghttp2_session_send()`, `nghttp2_session_mem_send()`,
  * `nghttp2_session_recv()`, and `nghttp2_session_mem_recv()`.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_session_find_stream(nghttp2_session *session, int32_t stream_id);
 
 /**
@@ -5651,7 +5646,7 @@ typedef enum {
  * `nghttp2_session_get_root_stream()` will have stream state
  * :enum:`nghttp2_stream_proto_state.NGHTTP2_STREAM_STATE_IDLE`.
  */
-NGHTTP2_EXTERN nghttp2_stream_proto_state
+NGHTTP2_IMPORT nghttp2_stream_proto_state
 nghttp2_stream_get_state(nghttp2_stream *stream);
 
 /**
@@ -5661,7 +5656,7 @@ nghttp2_stream_get_state(nghttp2_stream *stream);
  * stream ID 0.  The returned pointer is valid until |session| is
  * freed by `nghttp2_session_del()`.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_session_get_root_stream(nghttp2_session *session);
 
 /**
@@ -5670,10 +5665,10 @@ nghttp2_session_get_root_stream(nghttp2_session *session);
  * Returns the parent stream of |stream| in dependency tree.  Returns
  * NULL if there is no such stream.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_stream_get_parent(nghttp2_stream *stream);
 
-NGHTTP2_EXTERN int32_t nghttp2_stream_get_stream_id(nghttp2_stream *stream);
+NGHTTP2_IMPORT int32_t nghttp2_stream_get_stream_id(nghttp2_stream *stream);
 
 /**
  * @function
@@ -5681,7 +5676,7 @@ NGHTTP2_EXTERN int32_t nghttp2_stream_get_stream_id(nghttp2_stream *stream);
  * Returns the next sibling stream of |stream| in dependency tree.
  * Returns NULL if there is no such stream.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_stream_get_next_sibling(nghttp2_stream *stream);
 
 /**
@@ -5690,7 +5685,7 @@ nghttp2_stream_get_next_sibling(nghttp2_stream *stream);
  * Returns the previous sibling stream of |stream| in dependency tree.
  * Returns NULL if there is no such stream.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_stream_get_previous_sibling(nghttp2_stream *stream);
 
 /**
@@ -5699,7 +5694,7 @@ nghttp2_stream_get_previous_sibling(nghttp2_stream *stream);
  * Returns the first child stream of |stream| in dependency tree.
  * Returns NULL if there is no such stream.
  */
-NGHTTP2_EXTERN nghttp2_stream *
+NGHTTP2_IMPORT nghttp2_stream *
 nghttp2_stream_get_first_child(nghttp2_stream *stream);
 
 /**
@@ -5707,14 +5702,14 @@ nghttp2_stream_get_first_child(nghttp2_stream *stream);
  *
  * Returns dependency weight to the parent stream of |stream|.
  */
-NGHTTP2_EXTERN int32_t nghttp2_stream_get_weight(nghttp2_stream *stream);
+NGHTTP2_IMPORT int32_t nghttp2_stream_get_weight(nghttp2_stream *stream);
 
 /**
  * @function
  *
  * Returns the sum of the weight for |stream|'s children.
  */
-NGHTTP2_EXTERN int32_t
+NGHTTP2_IMPORT int32_t
 nghttp2_stream_get_sum_dependency_weight(nghttp2_stream *stream);
 
 /**
@@ -5750,11 +5745,9 @@ typedef void (*nghttp2_debug_vprintf_callback)(const char *format,
  *   used for debugging purpose only.  We write this two times because
  *   this is important.
  */
-NGHTTP2_EXTERN void nghttp2_set_debug_vprintf_callback(
+NGHTTP2_IMPORT void nghttp2_set_debug_vprintf_callback(
     nghttp2_debug_vprintf_callback debug_vprintf_callback);
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* NGHTTP2_H */

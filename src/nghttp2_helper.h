@@ -22,17 +22,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef NGHTTP2_HELPER_H
-#define NGHTTP2_HELPER_H
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif /* HAVE_CONFIG_H */
+#pragma once
 
 #include <string.h>
 #include <stddef.h>
 
-#include <libnghttp2/nghttp2.h>
 #include "nghttp2_mem.h"
 
 #define nghttp2_min(A, B) ((A) < (B) ? (A) : (B))
@@ -118,5 +113,3 @@ int nghttp2_should_send_window_update(int32_t local_window_size,
  * . Returns dest + len.
  */
 uint8_t *nghttp2_cpymem(uint8_t *dest, const void *src, size_t len);
-
-#endif /* NGHTTP2_HELPER_H */

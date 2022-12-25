@@ -22,12 +22,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include "nghttp2_helper.h"
 
 #include <assert.h>
 #include <string.h>
 
+#include "nghttp2_helper.h"
 #include "nghttp2_net.h"
+#include "libnghttp2/nghttp2.h"
+
+#if defined _WIN32 || defined _WIN64
+#define NGHTTP2_EXPORT __declspec(dllexport)
+#elif defined __linux__
+#define NGHTTP2_EXPORT __attribute__ ((visibility ("default")))
+#endif
 
 void nghttp2_put_uint16be(uint8_t *buf, uint16_t n) {
   uint16_t x = htons(n);
@@ -250,7 +257,7 @@ int nghttp2_should_send_window_update(int32_t local_window_size,
   return recv_window_size > 0 && recv_window_size >= local_window_size / 2;
 }
 
-const char *nghttp2_strerror(int error_code) {
+NGHTTP2_EXPORT const char* nghttp2_strerror(int error_code) {
   switch (error_code) {
   case 0:
     return "Success";
@@ -409,7 +416,7 @@ static const int VALID_HD_NAME_CHARS[] = {
     0 /* 0xfc */, 0 /* 0xfd */, 0 /* 0xfe */, 0 /* 0xff */
 };
 
-int nghttp2_check_header_name(const uint8_t *name, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_header_name(const uint8_t *name, size_t len) {
   const uint8_t *last;
   if (len == 0) {
     return 0;
@@ -497,7 +504,7 @@ static const int VALID_HD_VALUE_CHARS[] = {
     1 /* 0xfc */, 1 /* 0xfd */, 1 /* 0xfe */, 1 /* 0xff */
 };
 
-int nghttp2_check_header_value(const uint8_t *value, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_header_value(const uint8_t *value, size_t len) {
   const uint8_t *last;
   for (last = value + len; value != last; ++value) {
     if (!VALID_HD_VALUE_CHARS[*value]) {
@@ -507,7 +514,7 @@ int nghttp2_check_header_value(const uint8_t *value, size_t len) {
   return 1;
 }
 
-int nghttp2_check_header_value_rfc9113(const uint8_t *value, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_header_value_rfc9113(const uint8_t *value, size_t len) {
   if (len == 0) {
     return 1;
   }
@@ -588,7 +595,7 @@ static char VALID_METHOD_CHARS[] = {
     0 /* 0xfc */, 0 /* 0xfd */, 0 /* 0xfe */, 0 /* 0xff */
 };
 
-int nghttp2_check_method(const uint8_t *value, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_method(const uint8_t *value, size_t len) {
   const uint8_t *last;
   if (len == 0) {
     return 0;
@@ -669,7 +676,7 @@ static char VALID_PATH_CHARS[] = {
     1 /* 0xfc */, 1 /* 0xfd */, 1 /* 0xfe */, 1 /* 0xff */
 };
 
-int nghttp2_check_path(const uint8_t *value, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_path(const uint8_t *value, size_t len) {
   const uint8_t *last;
   for (last = value + len; value != last; ++value) {
     if (!VALID_PATH_CHARS[*value]) {
@@ -747,7 +754,7 @@ static char VALID_AUTHORITY_CHARS[] = {
     0 /* 0xfc */, 0 /* 0xfd */, 0 /* 0xfe */, 0 /* 0xff */
 };
 
-int nghttp2_check_authority(const uint8_t *value, size_t len) {
+NGHTTP2_EXPORT int nghttp2_check_authority(const uint8_t *value, size_t len) {
   const uint8_t *last;
   for (last = value + len; value != last; ++value) {
     if (!VALID_AUTHORITY_CHARS[*value]) {
@@ -767,7 +774,7 @@ uint8_t *nghttp2_cpymem(uint8_t *dest, const void *src, size_t len) {
   return dest + len;
 }
 
-const char *nghttp2_http2_strerror(uint32_t error_code) {
+NGHTTP2_EXPORT const char* nghttp2_http2_strerror(uint32_t error_code) {
   switch (error_code) {
   case NGHTTP2_NO_ERROR:
     return "NO_ERROR";

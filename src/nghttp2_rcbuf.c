@@ -33,9 +33,9 @@
 #include "nghttp2_helper.h"
 
 #if defined _WIN32 || defined _WIN64
-#define NGHTTP2_EXTERN __declspec(dllexport)
+#define NGHTTP2_EXPORT __declspec(dllexport)
 #elif defined __linux__
-#define NGHTTP2_EXTERN __attribute__ ((visibility ("default")))
+#define NGHTTP2_EXPORT __attribute__ ((visibility ("default")))
 #endif
 
 int nghttp2_rcbuf_new(nghttp2_rcbuf **rcbuf_ptr, size_t size,
@@ -80,7 +80,7 @@ void nghttp2_rcbuf_del(nghttp2_rcbuf *rcbuf) {
   nghttp2_mem_free2(rcbuf->free, rcbuf, rcbuf->mem_user_data);
 }
 
-NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXPORT void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
   if (rcbuf->ref == -1) {
     return;
   }
@@ -88,7 +88,7 @@ NGHTTP2_EXTERN void nghttp2_rcbuf_incref(nghttp2_rcbuf *rcbuf) {
   ++rcbuf->ref;
 }
 
-NGHTTP2_EXTERN void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXPORT void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
   if (rcbuf == NULL || rcbuf->ref == -1) {
     return;
   }
@@ -100,11 +100,11 @@ NGHTTP2_EXTERN void nghttp2_rcbuf_decref(nghttp2_rcbuf *rcbuf) {
   }
 }
 
-NGHTTP2_EXTERN nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXPORT nghttp2_vec nghttp2_rcbuf_get_buf(nghttp2_rcbuf *rcbuf) {
   nghttp2_vec res = {rcbuf->base, rcbuf->len};
   return res;
 }
 
-NGHTTP2_EXTERN int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf) {
+NGHTTP2_EXPORT int nghttp2_rcbuf_is_static(const nghttp2_rcbuf *rcbuf) {
   return rcbuf->ref == -1;
 }
