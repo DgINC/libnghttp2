@@ -23,24 +23,21 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 cmake_minimum_required(VERSION 3.24)
-project(libnghttp2 VERSION 1.51.0 DESCRIPTION "HTTP/2 C library" HOMEPAGE_URL "https://github.com/tatsuhiro-t/nghttp2" LANGUAGES C )
+project(nghttp2 VERSION 1.51.0 DESCRIPTION "HTTP/2 C library" HOMEPAGE_URL "https://github.com/tatsuhiro-t/nghttp2" LANGUAGES C )
 
-option(LIBNGHTTP2_BUILD_STATIC "Build static lib" ON)
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/libnghttp2/nghttp2ver.h.in" "${CMAKE_CURRENT_BINARY_DIR}/include/libnghttp2/nghttp2ver.h")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the build type" FORCE)
 
-if(WIN32)
-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/version.rc" @ONLY)
-  set(LIBNGHTTP2_RES "${CMAKE_CURRENT_SOURCE_DIR}/src/version.rc")
-else()
-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libnghttp2.pc" @ONLY)
+  # Include "None" as option to disable any additional (optimization) flags,
+  # relying on just CMAKE_C_FLAGS and CMAKE_CXX_FLAGS (which are empty by
+  # default). These strings are presented in cmake-gui.
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "None" "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-include_directories(
-  "${CMAKE_CURRENT_SOURCE_DIR}/includes"
-  "${CMAKE_CURRENT_BINARY_DIR}/includes")
-
-list (APPEND LIBNGHTTP2_SOURCE_FILES
+list(APPEND LIBNGHTTP2_SOURCE_FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_pq.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_map.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_queue.c"
@@ -55,7 +52,6 @@ list (APPEND LIBNGHTTP2_SOURCE_FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_hd.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_hd_huffman.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_hd_huffman_data.c"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_version.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_priority_spec.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_option.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_callbacks.c"
@@ -65,27 +61,62 @@ list (APPEND LIBNGHTTP2_SOURCE_FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_extpri.c"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/nghttp2_debug.c")
 
-if (LIBNGHTTP2_BUILD_STATIC)
-  add_library(${PROJECT_NAME} STATIC ${LIBNGHTTP2_SOURCE_FILES})
+if(WIN32)
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/version.rc" @ONLY)
+  list (APPEND LIBNGHTTP2_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/version.rc")
 else()
-  add_library(${PROJECT_NAME} SHARED ${LIBNGHTTP2_SOURCE_FILES})
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libnghttp2.pc" @ONLY)
 endif()
 
-target_include_directories(${PROJECT_NAME}
-  SYSTEM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>  # <prefix>/include/libnghttp2
-)
+add_library(${PROJECT_NAME} ${LIBNGHTTP2_SOURCE_FILES})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD_REQUIRED ON)
-set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 17)
+target_include_directories(${PROJECT_NAME}
+  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+target_compile_features(${PROJECT_NAME} PUBLIC c_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release
-        CACHE STRING "Set build type to Debug o Release (default Release)" FORCE)
+set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/libnghttp2/nghttp2.h)
+
+if(WIN32)
+  set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "lib${PROJECT_NAME}")
+  set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 endif()
 
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-	
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+if(LIBNGHTTP2_BUILD_STATIC)
+  install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+elseif(WIN32)
+  install(TARGETS ${PROJECT_NAME} EXPORT "${PROJECT_NAME}Targets" RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}" PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
+else()
+  install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+endif()
+
+if(UNIX AND NOT APPLE)
+    install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+endif()
+
+
+
+set(CPACK_PACKAGE_VENDOR "Vendor name")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Some summary")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES
+    /.git
+    /dist
+    /.*build.*
+    /\\\\.DS_Store
+)
+
+include(CPack)

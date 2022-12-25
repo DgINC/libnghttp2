@@ -22,6 +22,8 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+#pragma once
+
 #ifndef NGHTTP2_H
 #define NGHTTP2_H
 
@@ -54,8 +56,6 @@ extern "C" {
 #else
 #include <unistd.h>
 #endif
-
-#include <libnghttp2/nghttp2ver.h>
 
 #if defined _WIN32 || defined _WIN64
 #define NGHTTP2_EXTERN __declspec(dllimport)
@@ -120,42 +120,6 @@ struct nghttp2_session;
  * from the public API.
  */
 typedef struct nghttp2_session nghttp2_session;
-
-/**
- * @macro
- *
- * The age of :type:`nghttp2_info`
- */
-#define NGHTTP2_VERSION_AGE 1
-
-/**
- * @struct
- *
- * This struct is what `nghttp2_version()` returns.  It holds
- * information about the particular nghttp2 version.
- */
-typedef struct {
-  /**
-   * Age of this struct.  This instance of nghttp2 sets it to
-   * :macro:`NGHTTP2_VERSION_AGE` but a future version may bump it and
-   * add more struct fields at the bottom
-   */
-  int age;
-  /**
-   * the :macro:`NGHTTP2_VERSION_NUM` number (since age ==1)
-   */
-  int version_num;
-  /**
-   * points to the :macro:`NGHTTP2_VERSION` string (since age ==1)
-   */
-  const char *version_str;
-  /**
-   * points to the :macro:`NGHTTP2_PROTO_VERSION_ID` string this
-   * instance implements (since age ==1)
-   */
-  const char *proto_str;
-  /* -------- the above fields all exist when age == 1 */
-} nghttp2_info;
 
 /**
  * @macro
@@ -5007,17 +4971,6 @@ NGHTTP2_EXTERN int nghttp2_select_next_protocol(unsigned char **out,
                                                 unsigned char *outlen,
                                                 const unsigned char *in,
                                                 unsigned int inlen);
-
-/**
- * @function
- *
- * Returns a pointer to a nghttp2_info struct with version information
- * about the run-time library in use.  The |least_version| argument
- * can be set to a 24 bit numerical value for the least accepted
- * version number and if the condition is not met, this function will
- * return a ``NULL``.  Pass in 0 to skip the version checking.
- */
-NGHTTP2_EXTERN nghttp2_info *nghttp2_version(int least_version);
 
 /**
  * @function
